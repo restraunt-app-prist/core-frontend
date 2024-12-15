@@ -36,7 +36,7 @@ onMounted(async () => {
           <v-avatar size="100" class="mb-3">
             <img :src="currentUser.pictureUrl" alt="User Avatar" />
           </v-avatar>
-          <v-card-title>{{ currentUser.firstName }} - {{ currentUser.lastName }}</v-card-title>
+          <v-card-title>{{ currentUser.firstName }} {{ currentUser.lastName }}</v-card-title>
           <v-card-subtitle>{{ currentUser.email }}</v-card-subtitle>
           <v-card-actions>
             <v-btn color="primary" @click="logout">Logout</v-btn>
