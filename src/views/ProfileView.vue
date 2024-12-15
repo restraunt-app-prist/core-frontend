@@ -1,13 +1,43 @@
+<script setup>
+import { getAccessToken } from '@/auth';
+import Loader from '@/components/Loader.vue';
+import { ref, onMounted } from 'vue';
+
+const currentUser = ref(null);
+const loading = ref(true);
+
+onMounted(async () => {
+  const accessToken = getAccessToken();
+
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", `Bearer ${accessToken}`);
+
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders
+  };
+
+  console.log(`${import.meta.env.VITE_APP_HOST}/api/user/current`);
+  const response = await fetch(`${import.meta.env.VITE_APP_HOST}/api/user/current`, requestOptions);
+  if (!response.ok) {
+    throw new Error(`cannot get current user: status code ${response.status}`);
+  }
+  currentUser.value = await response.json();
+  loading.value = false;
+});
+</script>
+
 <template>
-  <v-container class="mt-5">
+  <Loader v-if="loading"/>
+  <v-container v-else class="mt-5">
     <v-row>
       <v-col cols="12" md="6" offset-md="3">
         <v-card class="pa-3">
           <v-avatar size="100" class="mb-3">
-            <img :src="user.picture" alt="User Avatar" />
+            <img :src="currentUser.pictureUrl" alt="User Avatar" />
           </v-avatar>
-          <v-card-title>{{ user.name }}</v-card-title>
-          <v-card-subtitle>{{ user.email }}</v-card-subtitle>
+          <v-card-title>{{ currentUser.firstName }} - {{ currentUser.lastName }}</v-card-title>
+          <v-card-subtitle>{{ currentUser.email }}</v-card-subtitle>
           <v-card-actions>
             <v-btn color="primary" @click="logout">Logout</v-btn>
           </v-card-actions>
@@ -16,58 +46,6 @@
     </v-row>
   </v-container>
 </template>
-
-<script>
-export default {
-  name: "ProfilePage",
-  data() {
-    return {
-      user: {
-        name: "",
-        email: "",
-        picture: "",
-      },
-    };
-  },
-  created() {
-    this.loadUserInfo();
-  },
-  methods: {
-    async loadUserInfo() {
-      try {
-        // Extract token from localStorage or cookies
-        const idToken = localStorage.getItem("access_token");
-
-        if (!idToken) {
-          // Redirect to login if no token is found
-          this.$router.push("/login");
-          return;
-        }
-
-        // Decode the ID token to get user information
-        const base64Url = idToken.split(".")[1];
-        const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-        const jsonPayload = decodeURIComponent(
-          atob(base64)
-            .split("")
-            .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-            .join("")
-        );
-
-        this.user = JSON.parse(jsonPayload);
-      } catch (error) {
-        console.error("Failed to load user info:", error);
-        this.$router.push("/login");
-      }
-    },
-    logout() {
-      // Clear token and redirect to login
-      localStorage.removeItem("google_id_token");
-      this.$router.push("/login");
-    },
-  },
-};
-</script>
 
 <style scoped>
 .v-avatar img {
