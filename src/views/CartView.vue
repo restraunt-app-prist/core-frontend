@@ -111,6 +111,12 @@ onMounted(async () => {
     <BackgroundContainer>
       <div v-if="cart">
         <v-row>
+          <div class="total-price-container">
+            <span>Total Price:</span>
+            <span class="price">{{ cart.totalPrice }}</span>
+          </div>
+        </v-row>
+        <v-row>
           <v-col v-for="item in cart.items" :key="item.menuItemId" cols="12" md="4">
             <v-card class="mx-auto" max-width="344">
               <v-img height="200px" :src="item.picture" alt="Cart item image" cover></v-img>
@@ -131,8 +137,8 @@ onMounted(async () => {
               <v-divider></v-divider>
 
               <v-card-text>
-                Price: ${{ item.price }} <br />
-                Total: ${{ item.price * item.quantity }}
+                Price: {{ item.price }} <br />
+                Total: {{ item.price * item.quantity }}
               </v-card-text>
             </v-card>
           </v-col>
@@ -146,3 +152,23 @@ onMounted(async () => {
     </BackgroundContainer>
   </div>
 </template>
+
+
+<style scoped>
+.total-price-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Poppins", sans-serif; /* Use Google Fonts for a stylish look */
+  font-size: 2rem; /* Large font size */
+  font-weight: 700; /* Bold font */
+  color: #333; /* Dark gray color for text */
+  margin: 20px 0; /* Spacing above and below */
+  text-transform: uppercase; /* Capitalize all letters */
+}
+
+.price {
+  margin-left: 10px;
+  color: #d9534f; /* Highlight price in a different color (e.g., red) */
+}
+</style>
