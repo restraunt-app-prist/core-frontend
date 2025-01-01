@@ -66,6 +66,28 @@ const clearCart = async () => {
   }
 };
 
+
+const removeItemFromCart = async (cartItemId) => {
+  const accessToken = getAccessToken();
+  const headers = new Headers();
+  if (accessToken) {
+    headers.append("Authorization", `Bearer ${accessToken}`);
+  }
+
+  try {
+    const response = await fetch(`${API_HOST}/api/cart/items/${cartItemId}`, {
+      method: "DELETE",
+      headers,
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to clear cart: status code ${response.status}`);
+    }
+    cart.value = await fetchCartWithMenuItems();
+  } catch (error) {
+    throw error;
+  }
+}
+
 // Initialize the cart with menu items on mount
 onMounted(async () => {
   try {
@@ -91,7 +113,7 @@ onMounted(async () => {
         <v-row>
           <v-col v-for="item in cart.items" :key="item.menuItemId" cols="12" md="4">
             <v-card class="mx-auto" max-width="344">
-              <v-img height="200px" :src="item.pictureUrl" alt="Cart item image" cover></v-img>
+              <v-img height="200px" :src="item.picture" alt="Cart item image" cover></v-img>
 
               <v-card-title>
                 {{ item.name }}
@@ -103,7 +125,7 @@ onMounted(async () => {
 
               <v-card-actions>
                 <!-- Button to remove an item from the cart -->
-                <v-btn color="red" @click="removeItemFromCart(item.menuItemId)">Remove from Cart</v-btn>
+                <v-btn color="red" @click="() => removeItemFromCart(item.menuItemId)">Remove from Cart</v-btn>
               </v-card-actions>
 
               <v-divider></v-divider>
