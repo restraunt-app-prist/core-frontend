@@ -9,13 +9,13 @@ export const isAuthenticated = ref(!!localStorage.getItem(ACCESS_TOKEN));
 export const login = async (accessToken) => {
   isAuthenticated.value = true;
   localStorage.setItem(ACCESS_TOKEN, accessToken);
-  router.push("/");
+  await router.push("/");
 };
 
-export const logout = () => {
+export const logout = async () => {
   isAuthenticated.value = false;
   localStorage.removeItem(ACCESS_TOKEN)
-  router.push("/");
+  await router.push("/");
 };
 
 export const getAccessToken = () => {

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getAccessToken } from '@/auth';
+import BackgroundContainer from "@/components/BackgroundContainer.vue";
 
 const cart = ref(null);
 const isLoading = ref(false);
@@ -85,39 +86,41 @@ onMounted(async () => {
     <div v-if="isLoading">Loading...</div>
     <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
 
-    <div v-if="cart">
-      <v-row>
-        <v-col v-for="item in cart.items" :key="item.menuItemId" cols="12" md="4">
-          <v-card class="mx-auto" max-width="344">
-            <v-img height="200px" :src="item.pictureUrl" alt="Cart item image" cover></v-img>
+    <BackgroundContainer>
+      <div v-if="cart">
+        <v-row>
+          <v-col v-for="item in cart.items" :key="item.menuItemId" cols="12" md="4">
+            <v-card class="mx-auto" max-width="344">
+              <v-img height="200px" :src="item.pictureUrl" alt="Cart item image" cover></v-img>
 
-            <v-card-title>
-              {{ item.name }}
-            </v-card-title>
+              <v-card-title>
+                {{ item.name }}
+              </v-card-title>
 
-            <v-card-subtitle>
-              Quantity: {{ item.quantity }}
-            </v-card-subtitle>
+              <v-card-subtitle>
+                Quantity: {{ item.quantity }}
+              </v-card-subtitle>
 
-            <v-card-actions>
-              <!-- Button to remove an item from the cart -->
-              <v-btn color="red" text @click="removeItemFromCart(item.menuItemId)">Remove from Cart</v-btn>
-            </v-card-actions>
+              <v-card-actions>
+                <!-- Button to remove an item from the cart -->
+                <v-btn color="red" @click="removeItemFromCart(item.menuItemId)">Remove from Cart</v-btn>
+              </v-card-actions>
 
-            <v-divider></v-divider>
+              <v-divider></v-divider>
 
-            <v-card-text>
-              Price: ${{ item.price }} <br />
-              Total: ${{ item.price * item.quantity }}
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
+              <v-card-text>
+                Price: ${{ item.price }} <br />
+                Total: ${{ item.price * item.quantity }}
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
 
-      <!-- Button to clear the entire cart -->
-      <v-btn @click="clearCart" color="primary" class="mt-4">Clear Cart</v-btn>
-    </div>
+        <!-- Button to clear the entire cart -->
+        <v-btn @click="clearCart" color="primary" class="mt-4">Clear Cart</v-btn>
+      </div>
 
-    <div v-else>No items in cart.</div>
+      <div v-else>No items in cart.</div>
+    </BackgroundContainer>
   </div>
 </template>
