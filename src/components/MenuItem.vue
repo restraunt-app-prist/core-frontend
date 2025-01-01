@@ -1,7 +1,9 @@
 <script setup>
-  import { ref } from 'vue';
-  const show = ref(false);
-  defineProps(['title', 'description', 'price', 'picture']);
+import { ref } from 'vue';
+import AddToCartButton from './AddToCartButton.vue';
+
+const show = ref(false);
+defineProps(['title', 'description', 'price', 'picture', 'menuItemId']);
 </script>
 
 <template>
@@ -19,6 +21,7 @@
     <v-card-actions>
       <v-btn color="orange-lighten-2" text="Explore"></v-btn>
       <v-spacer></v-spacer>
+      <AddToCartButton :menuItemId="menuItemId" />
       <v-btn :icon="show ? 'mdi-chevron-up' : 'mdi-chevron-down'" @click="show = !show"></v-btn>
     </v-card-actions>
 

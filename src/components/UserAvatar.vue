@@ -20,6 +20,12 @@ defineProps(['picture'])
 
       <v-divider></v-divider>
 
+      <v-list-item link to="/cart">
+        <v-list-item-title>Cart</v-list-item-title>
+      </v-list-item>
+
+      <v-divider></v-divider>
+
       <v-list-item @click="logout">
         <v-list-item-title>Logout</v-list-item-title>
       </v-list-item>

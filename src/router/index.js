@@ -4,6 +4,7 @@ import AboutView from '@/views/AboutView.vue';
 import CartView from '@/views/CartView.vue';
 import LoginView from '@/views/LoginView.vue';
 import ProfileView from '@/views/ProfileView.vue';
+import CreateOrderView from '@/views/CreateOrderView.vue';
 
 const routes = [
   {
@@ -20,6 +21,11 @@ const routes = [
     path: '/cart',
     name: 'cart',
     component: CartView,
+  },
+  {
+    path: '/cart/order',
+    name: 'order',
+    component: CreateOrderView,
   },
   {
     path: '/login',

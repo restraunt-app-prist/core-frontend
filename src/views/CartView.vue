@@ -1,5 +1,123 @@
+<script setup>
+import { ref, onMounted } from 'vue';
+import { getAccessToken } from '@/auth';
+
+const cart = ref(null);
+const isLoading = ref(false);
+const errorMessage = ref('');
+
+const API_HOST = import.meta.env.VITE_APP_HOST;
+
+// Fetch cart and its associated menu items
+const fetchCartWithMenuItems = async () => {
+  const accessToken = getAccessToken();
+  const headers = new Headers();
+  if (accessToken) {
+    headers.append("Authorization", `Bearer ${accessToken}`);
+  }
+
+  try {
+    // Fetch the cart
+    const cartResponse = await fetch(`${API_HOST}/api/cart`, { headers });
+    if (!cartResponse.ok) {
+      throw new Error(`Failed to fetch cart: status code ${cartResponse.status}`);
+    }
+    const cartData = await cartResponse.json();
+
+    // Fetch menu items by their IDs using Promise.all
+    const menuItemsPromises = cartData.items.map(async (item) => {
+      const menuItemResponse = await fetch(`${API_HOST}/api/menu/${item.menuItemId}`, { headers });
+      if (!menuItemResponse.ok) {
+        throw new Error(`Failed to fetch menu item ${item.menuItemId}: status code ${menuItemResponse.status}`);
+      }
+      const menuItem = await menuItemResponse.json();
+      return { ...item, name: menuItem.name, price: menuItem.price, picture: menuItem.pictureUrl }; // Include additional details
+    });
+
+    // Resolve all menu items
+    const resolvedItems = await Promise.all(menuItemsPromises);
+    return { ...cartData, items: resolvedItems };
+
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Clear the cart
+const clearCart = async () => {
+  const accessToken = getAccessToken();
+  const headers = new Headers();
+  if (accessToken) {
+    headers.append("Authorization", `Bearer ${accessToken}`);
+  }
+
+  try {
+    const response = await fetch(`${API_HOST}/api/cart`, {
+      method: "DELETE",
+      headers,
+    });
+    if (!response.ok) {
+      throw new Error(`Failed to clear cart: status code ${response.status}`);
+    }
+    cart.value = null; // Reset cart in UI
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Initialize the cart with menu items on mount
+onMounted(async () => {
+  try {
+    isLoading.value = true;
+    cart.value = await fetchCartWithMenuItems();
+  } catch (error) {
+    errorMessage.value = error.message || 'Error loading cart.';
+  } finally {
+    isLoading.value = false;
+  }
+});
+</script>
+
 <template>
-  <div>Cart page</div>
-  <RouterLink to="/about">About</RouterLink>
-  <RouterLink to="/">Home</RouterLink>
+  <div>
+    <h1>Cart</h1>
+
+    <div v-if="isLoading">Loading...</div>
+    <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
+
+    <div v-if="cart">
+      <v-row>
+        <v-col v-for="item in cart.items" :key="item.menuItemId" cols="12" md="4">
+          <v-card class="mx-auto" max-width="344">
+            <v-img height="200px" :src="item.pictureUrl" alt="Cart item image" cover></v-img>
+
+            <v-card-title>
+              {{ item.name }}
+            </v-card-title>
+
+            <v-card-subtitle>
+              Quantity: {{ item.quantity }}
+            </v-card-subtitle>
+
+            <v-card-actions>
+              <!-- Button to remove an item from the cart -->
+              <v-btn color="red" text @click="removeItemFromCart(item.menuItemId)">Remove from Cart</v-btn>
+            </v-card-actions>
+
+            <v-divider></v-divider>
+
+            <v-card-text>
+              Price: ${{ item.price }} <br />
+              Total: ${{ item.price * item.quantity }}
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <!-- Button to clear the entire cart -->
+      <v-btn @click="clearCart" color="primary" class="mt-4">Clear Cart</v-btn>
+    </div>
+
+    <div v-else>No items in cart.</div>
+  </div>
 </template>

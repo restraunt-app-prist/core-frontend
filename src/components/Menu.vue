@@ -57,10 +57,12 @@ onMounted(async () => {
   <Loader v-if="loading" />
   <div v-else class="d-flex justify-end mb-6 flex-wrap ga-4">
     <MenuItem 
-      v-for="{ name, description, pictureUrl, price } in menuItems" 
+      v-for="{ id, name, description, pictureUrl, price } in menuItems"
+      :key="id"
       :title="name" 
       :description="description"
       :price="price" 
-      :picture="pictureUrl" />
+      :picture="pictureUrl"
+      :menuItemId="id" />
   </div>
 </template>
