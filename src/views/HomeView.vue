@@ -4,9 +4,6 @@ import BackgroundContainer from "@/components/BackgroundContainer.vue";
 </script>
 
 <template>
-  <div>Home page</div>
-  <RouterLink to="/about">About</RouterLink>
-  <RouterLink to="/cart">Cart</RouterLink>
   <BackgroundContainer>
     <Menu />
   </BackgroundContainer>

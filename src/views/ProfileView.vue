@@ -1,7 +1,8 @@
 <script setup>
-import { getAccessToken } from '@/auth';
+import {getAccessToken, logout} from '@/auth';
 import Loader from '@/components/Loader.vue';
-import { ref, onMounted } from 'vue';
+import {ref, onMounted} from 'vue';
+import BackgroundContainer from "@/components/BackgroundContainer.vue";
 
 const currentUser = ref(null);
 const loading = ref(true);
@@ -29,12 +30,12 @@ onMounted(async () => {
 
 <template>
   <Loader v-if="loading"/>
-  <v-container v-else class="mt-5">
+  <BackgroundContainer v-else>
     <v-row>
       <v-col cols="12" md="6" offset-md="3">
         <v-card class="pa-3">
           <v-avatar size="100" class="mb-3">
-            <img :src="currentUser.pictureUrl" alt="User Avatar" />
+            <img :src="currentUser.pictureUrl" alt="User Avatar"/>
           </v-avatar>
           <v-card-title>{{ currentUser.firstName }} {{ currentUser.lastName }}</v-card-title>
           <v-card-subtitle>{{ currentUser.email }}</v-card-subtitle>
@@ -44,7 +45,7 @@ onMounted(async () => {
         </v-card>
       </v-col>
     </v-row>
-  </v-container>
+  </BackgroundContainer>
 </template>
 
 <style scoped>

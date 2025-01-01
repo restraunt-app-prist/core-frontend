@@ -100,22 +100,37 @@ onMounted(async () => {
   }
 });
 </script>
-
 <template>
   <div>
-    <h1>Cart</h1>
-
     <div v-if="isLoading">Loading...</div>
     <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
 
     <BackgroundContainer>
       <div v-if="cart">
-        <v-row>
-          <div class="total-price-container">
-            <span>Total Price:</span>
-            <span class="price">{{ cart.totalPrice }}</span>
-          </div>
+        <!-- Total Price and Button Group -->
+        <v-row align="center" class="my-4">
+          <v-col cols="6">
+            <div class="total-price-container">
+              <span>Total Price:</span>
+              <span class="price">{{ cart.totalPrice }}</span>
+            </div>
+          </v-col>
+
+          <v-col cols="6" class="text-right">
+            <v-btn-group>
+              <v-btn color="orange" @click="clearCart" class="mr-2">
+                Clear Cart
+              </v-btn>
+              <v-btn color="success" @click="makeOrder">
+                Make Order
+              </v-btn>
+            </v-btn-group>
+          </v-col>
         </v-row>
+
+        <v-divider></v-divider>
+
+        <!-- Cart Items -->
         <v-row>
           <v-col v-for="item in cart.items" :key="item.menuItemId" cols="12" md="4">
             <v-card class="mx-auto" max-width="344">
@@ -143,16 +158,12 @@ onMounted(async () => {
             </v-card>
           </v-col>
         </v-row>
-
-        <!-- Button to clear the entire cart -->
-        <v-btn @click="clearCart" color="primary" class="mt-4">Clear Cart</v-btn>
       </div>
 
       <div v-else>No items in cart.</div>
     </BackgroundContainer>
   </div>
 </template>
-
 
 <style scoped>
 .total-price-container {
