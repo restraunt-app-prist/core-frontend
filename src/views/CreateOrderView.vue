@@ -7,9 +7,29 @@ const selectedLocation = ref(null);  // Holds the selected location
 const notes = ref('');  // Holds the user's notes
 const isLoading = ref(false);
 const errorMessage = ref('');
+const distanceToRestaurant = ref(null);  // Holds the calculated distance to the restaurant
 
 const API_HOST = import.meta.env.VITE_APP_HOST;
 const router = useRouter();
+
+// Function to generate a random latitude and longitude within Kyiv
+const generateRandomKyivLocation = () => {
+  const kyivLat = 50.4501;  // Latitude of Kyiv
+  const kyivLng = 30.6400;  // Longitude of Kyiv
+
+  // Generate a random offset (within a small range around Kyiv's center)
+  const latOffset = (Math.random() - 0.5) * 0.1;  // Random offset between -0.05 and 0.05 degrees
+  const lngOffset = (Math.random() - 0.5) * 0.1;  // Random offset between -0.05 and 0.05 degrees
+
+  // Return a random location in Kyiv
+  return {
+    lat: kyivLat + latOffset,
+    lng: kyivLng + lngOffset,
+  };
+};
+
+// Define restaurant location (Random within Kyiv)
+const restaurantLocation = generateRandomKyivLocation();
 
 const map = ref(null);  // Holds the map instance
 const marker = ref(null);  // Holds the marker instance
@@ -17,7 +37,7 @@ const marker = ref(null);  // Holds the marker instance
 // Load Google Maps script dynamically
 const loadGoogleMaps = () => {
   const script = document.createElement('script');
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_APP_GMAPS_KEY}&libraries=places`;
+  script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_APP_GMAPS_KEY}&libraries=places,geometry`;
   script.async = true;
   script.onload = () => {
     initMap();
@@ -27,28 +47,101 @@ const loadGoogleMaps = () => {
 
 // Initialize the map
 const initMap = () => {
+  // Default map options
   const mapOptions = {
-    center: { lat: 40.730610, lng: -73.935242 },  // Default location (New York)
     zoom: 14,
   };
 
-  map.value = new google.maps.Map(document.getElementById('map'), mapOptions);
+  // Check for geolocation and use it if available, otherwise use the restaurant location
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const userLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        mapOptions.center = userLocation;
 
-  // Add marker to the map
-  marker.value = new google.maps.Marker({
-    map: map.value,
-    draggable: true,
-    position: map.value.getCenter(),
-  });
+        // Initialize map with user location
+        map.value = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-  // Update location on marker drag
-  google.maps.event.addListener(marker.value, 'dragend', () => {
-    const position = marker.value.getPosition();
-    selectedLocation.value = {
-      lat: position.lat(),
-      lng: position.lng(),
-    };
-  });
+        // Add marker for the restaurant
+        new google.maps.Marker({
+          map: map.value,
+          position: restaurantLocation,
+          label: 'Restaurant',
+        });
+
+        // Add marker for the user (draggable)
+        marker.value = new google.maps.Marker({
+          map: map.value,
+          draggable: true,
+          position: userLocation,  // Initially set marker to user's geolocation
+        });
+
+        // Update location and calculate distance on marker drag
+        google.maps.event.addListener(marker.value, 'dragend', () => {
+          const userLatLng = marker.value.getPosition();
+          selectedLocation.value = {
+            lat: userLatLng.lat(),
+            lng: userLatLng.lng(),
+          };
+          calculateDistanceToRestaurant();
+        });
+
+        // Calculate distance initially when the marker is placed at user's location
+        calculateDistanceToRestaurant();
+      },
+      () => {
+        // If geolocation fails, default to restaurant location
+        mapOptions.center = restaurantLocation;
+        map.value = new google.maps.Map(document.getElementById('map'), mapOptions);
+        
+        new google.maps.Marker({
+          map: map.value,
+          position: restaurantLocation,
+          label: 'Restaurant',
+        });
+
+        marker.value = new google.maps.Marker({
+          map: map.value,
+          draggable: true,
+          position: restaurantLocation,  // Default to restaurant location
+        });
+
+        calculateDistanceToRestaurant();
+      }
+    );
+  } else {
+    // If geolocation is not available, default to restaurant location
+    mapOptions.center = restaurantLocation;
+    map.value = new google.maps.Map(document.getElementById('map'), mapOptions);
+    
+    new google.maps.Marker({
+      map: map.value,
+      position: restaurantLocation,
+      label: 'Restaurant',
+    });
+
+    marker.value = new google.maps.Marker({
+      map: map.value,
+      draggable: true,
+      position: restaurantLocation,  // Default to restaurant location
+    });
+
+    calculateDistanceToRestaurant();
+  }
+};
+
+// Calculate the distance to the restaurant
+const calculateDistanceToRestaurant = () => {
+  if (selectedLocation.value) {
+    const userLatLng = new google.maps.LatLng(selectedLocation.value.lat, selectedLocation.value.lng);
+    const restaurantLatLng = new google.maps.LatLng(restaurantLocation.lat, restaurantLocation.lng);
+
+    // Calculate the distance in meters
+    distanceToRestaurant.value = google.maps.geometry.spherical.computeDistanceBetween(userLatLng, restaurantLatLng);
+  }
 };
 
 // Create the order with location and notes
@@ -67,14 +160,14 @@ const createOrder = async () => {
 
   const orderRequest = {
     deliveryLocation: selectedLocation.value,
-    notes: notes.value
+    notes: notes.value,
   };
 
   try {
     const response = await fetch(`${API_HOST}/api/orders`, {
       method: "POST",
       headers,
-      body: JSON.stringify(orderRequest)
+      body: JSON.stringify(orderRequest),
     });
 
     if (!response.ok) {
@@ -89,10 +182,8 @@ const createOrder = async () => {
 };
 
 // Watch for changes to selectedLocation
-watch(selectedLocation, (newLocation) => {
-  if (newLocation) {
-    marker.value.setPosition(new google.maps.LatLng(newLocation.lat, newLocation.lng));
-  }
+watch(selectedLocation, () => {
+  calculateDistanceToRestaurant();
 });
 
 onMounted(() => {
@@ -120,6 +211,10 @@ onMounted(() => {
       <div>
         <p>Please select a delivery location:</p>
         <div id="map" style="height: 400px;"></div>
+      </div>
+
+      <div v-if="distanceToRestaurant !== null">
+        <p>Distance to restaurant: {{ (distanceToRestaurant / 1000).toFixed(2) }} km</p> <!-- Display distance in km -->
       </div>
 
       <v-btn @click="createOrder" color="primary" class="mt-4">Create Order</v-btn>
