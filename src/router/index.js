@@ -4,7 +4,7 @@ import AboutView from '@/views/AboutView.vue';
 import CartView from '@/views/CartView.vue';
 import LoginView from '@/views/LoginView.vue';
 import ProfileView from '@/views/ProfileView.vue';
-import CreateOrderView from '@/views/CreateOrderView.vue';
+import CreateOrderView from '@/views/order/CreateOrderView.vue';
 
 const routes = [
   {

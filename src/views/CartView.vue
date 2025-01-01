@@ -105,7 +105,6 @@ onMounted(async () => {
     <div v-if="isLoading">Loading...</div>
     <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
 
-    <BackgroundContainer>
       <div v-if="cart">
         <!-- Total Price and Button Group -->
         <v-row align="center" class="my-4">
@@ -121,7 +120,7 @@ onMounted(async () => {
               <v-btn color="orange" @click="clearCart" class="mr-2">
                 Clear Cart
               </v-btn>
-              <v-btn color="success" @click="makeOrder">
+              <v-btn color="success" to="/cart/order">
                 Make Order
               </v-btn>
             </v-btn-group>
@@ -161,7 +160,6 @@ onMounted(async () => {
       </div>
 
       <div v-else>No items in cart.</div>
-    </BackgroundContainer>
   </div>
 </template>
 

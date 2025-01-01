@@ -30,22 +30,20 @@ onMounted(async () => {
 
 <template>
   <Loader v-if="loading"/>
-  <BackgroundContainer v-else>
-    <v-row>
-      <v-col cols="12" md="6" offset-md="3">
-        <v-card class="pa-3">
-          <v-avatar size="100" class="mb-3">
-            <img :src="currentUser.pictureUrl" alt="User Avatar"/>
-          </v-avatar>
-          <v-card-title>{{ currentUser.firstName }} {{ currentUser.lastName }}</v-card-title>
-          <v-card-subtitle>{{ currentUser.email }}</v-card-subtitle>
-          <v-card-actions>
-            <v-btn color="primary" @click="logout">Logout</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-  </BackgroundContainer>
+  <v-row v-else>
+    <v-col cols="12" md="6" offset-md="3">
+      <v-card class="pa-3">
+        <v-avatar size="100" class="mb-3">
+          <img :src="currentUser.pictureUrl" alt="User Avatar"/>
+        </v-avatar>
+        <v-card-title>{{ currentUser.firstName }} {{ currentUser.lastName }}</v-card-title>
+        <v-card-subtitle>{{ currentUser.email }}</v-card-subtitle>
+        <v-card-actions>
+          <v-btn color="primary" @click="logout">Logout</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <style scoped>

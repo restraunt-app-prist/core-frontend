@@ -13,7 +13,7 @@ import UserAvatar from './UserAvatar.vue';
     </v-app-bar-title>
 
     <!-- Navigation Links -->
-    <div class="nav-links">
+    <div class="nav-links"  v-if="isAuthenticated">
       <v-btn class="nav-link" to="/">
         Menu
       </v-btn>
