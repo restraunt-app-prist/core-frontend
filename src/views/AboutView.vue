@@ -5,9 +5,6 @@ const tab = ref("1");
 </script>
 
 <template>
-  <div>About page</div>
-  <RouterLink to="/">Home</RouterLink>
-  <v-icon icon="mdi-home" />
   <v-card>
     <v-tabs v-model="tab" align-tabs="center" color="deep-purple-accent-4">
       <v-tab :value="1">Landscape</v-tab>

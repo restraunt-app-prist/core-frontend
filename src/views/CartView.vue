@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getAccessToken } from '@/auth';
-import BackgroundContainer from "@/components/BackgroundContainer.vue";
+import Loader from "@/components/Loader.vue";
 
 const cart = ref(null);
 const isLoading = ref(false);
@@ -102,7 +102,7 @@ onMounted(async () => {
 </script>
 <template>
   <div>
-    <div v-if="isLoading">Loading...</div>
+    <Loader v-if="isLoading"/>
     <div v-if="errorMessage" class="error">{{ errorMessage }}</div>
 
       <div v-if="cart">
@@ -159,7 +159,7 @@ onMounted(async () => {
         </v-row>
       </div>
 
-      <div v-else>No items in cart.</div>
+      <div v-if="!cart && !isLoading">No items in cart yet</div>
   </div>
 </template>
 

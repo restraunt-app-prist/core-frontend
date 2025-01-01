@@ -20,11 +20,14 @@ import UserAvatar from './UserAvatar.vue';
       <v-btn class="nav-link" to="/about">
         About
       </v-btn>
-      <v-btn class="nav-link" to="/profile">
-        Profile
-      </v-btn>
       <v-btn class="nav-link" to="/cart">
         Cart
+      </v-btn>
+      <v-btn class="nav-link" to="/my-orders">
+        Orders
+      </v-btn>
+      <v-btn class="nav-link" to="/profile">
+        Profile
       </v-btn>
     </div>
 
