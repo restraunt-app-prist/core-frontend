@@ -1,5 +1,5 @@
 <script setup>
-import { logout } from '@/auth.js';
+import { logout } from '@/service/auth.js';
 defineProps(['picture'])
 </script>
 

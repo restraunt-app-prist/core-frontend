@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { getAccessToken } from '@/auth';
+import { getAccessToken } from '@/service/auth.js';
 
 const props = defineProps({
   menuItemId: {

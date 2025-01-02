@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { getAccessToken } from '@/auth';
+import { getAccessToken } from '@/service/auth.js';
 import Loader from "@/components/Loader.vue";
 
 const cart = ref(null);

@@ -16,7 +16,8 @@ const deliveryNeeded = ref(false);
 
 watch(deliveryNeeded, (newValue) => {
   const distance = newValue === true ? roadDistance.value : 0;
-  emit("deliveryNeeded", newValue, distance);
+  console.log(userLocation.value)
+  emit("deliveryNeeded", newValue, distance, userLocation.value);
 });
 
 onMounted(() => {

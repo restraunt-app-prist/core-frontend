@@ -1,5 +1,5 @@
 <script setup>
-import {getAccessToken, logout} from '@/auth';
+import {getAccessToken, logout} from '@/service/auth.js';
 import Loader from '@/components/Loader.vue';
 import {ref, onMounted} from 'vue';
 import BackgroundContainer from "@/components/BackgroundContainer.vue";

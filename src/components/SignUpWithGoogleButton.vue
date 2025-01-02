@@ -1,5 +1,5 @@
 <script setup>
-import { login } from '@/auth.js';
+import { login } from '@/service/auth.js';
 </script>
 
 <template>

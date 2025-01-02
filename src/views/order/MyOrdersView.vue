@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import Loader from '@/components/Loader.vue'; // Optional loader component
-import { getAccessToken } from '@/auth';
+import { getAccessToken } from '@/service/auth.js';
 
 const API_HOST = import.meta.env.VITE_APP_HOST;
 const orders = ref([]);

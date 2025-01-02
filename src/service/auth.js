@@ -1,6 +1,6 @@
 // auth.js
 import { ref } from 'vue';
-import router from './router';
+import router from '../router/index.js';
 
 const ACCESS_TOKEN = "access_token"
 

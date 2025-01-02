@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import { getAccessToken } from "@/auth"; // Function to retrieve access token
+import { getAccessToken } from "@/service/auth.js"; // Function to retrieve access token
 
 const API_HOST = import.meta.env.VITE_APP_HOST;
 const stripe = ref(null);

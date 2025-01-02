@@ -1,6 +1,6 @@
 <script setup>
 import SignUpWithGoogleButton from './SignUpWithGoogleButton.vue';
-import {isAuthenticated} from '@/auth.js';
+import {isAuthenticated} from '@/service/auth.js';
 import UserAvatar from './UserAvatar.vue';
 </script>
 

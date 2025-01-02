@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch, onMounted } from "vue";
-import { getAccessToken } from '@/auth';
+import { getAccessToken } from '@/service/auth.js';
 
 // Define props
 const props = defineProps({

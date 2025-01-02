@@ -1,7 +1,7 @@
 <script setup>
 import Loader from './Loader.vue';
 import MenuItem from './MenuItem.vue';
-import { getAccessToken } from '@/auth';
+import { getAccessToken } from '@/service/auth.js';
 import { ref, onMounted } from 'vue';
 
 const categories = ref([

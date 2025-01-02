@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import AddToCartButton from './AddToCartButton.vue';
-import { isAuthenticated } from '@/auth.js';
+import { isAuthenticated } from '@/service/auth.js';
 
 const show = ref(false);
 defineProps(['title', 'description', 'price', 'picture', 'menuItemId']);
