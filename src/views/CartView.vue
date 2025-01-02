@@ -111,16 +111,16 @@ onMounted(async () => {
           <v-col cols="6">
             <div class="total-price-container">
               <span>Total Price:</span>
-              <span class="price">{{ cart.totalPrice }}</span>
+              <span class="price">{{ cart.totalPrice.toFixed(2) }} UAH</span>
             </div>
           </v-col>
 
           <v-col cols="6" class="text-right">
             <v-btn-group>
-              <v-btn color="orange" @click="clearCart" class="mr-2">
+              <v-btn v-if="cart.totalPrice.toFixed(2) > 1" color="orange" @click="clearCart" class="mr-2">
                 Clear Cart
               </v-btn>
-              <v-btn color="success" to="/cart/order">
+              <v-btn v-if="cart.totalPrice.toFixed(2) > 1" color="success" to="/cart/order">
                 Make Order
               </v-btn>
             </v-btn-group>

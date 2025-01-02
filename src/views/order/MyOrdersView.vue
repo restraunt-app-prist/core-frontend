@@ -56,7 +56,7 @@ onMounted(() => {
               </v-btn>
             </v-card-title>
             <v-card-subtitle>
-              <p>Total Price: {{ order.totalPrice }} UAH </p>
+              <p>Total Price: {{ order.totalPrice.toFixed(2) }} UAH </p>
               <p>Created: {{ new Date(order.creationDate).toLocaleString() }}</p>
             </v-card-subtitle>
             <v-divider></v-divider>

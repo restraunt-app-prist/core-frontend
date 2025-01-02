@@ -69,7 +69,7 @@ onMounted(async () => {
         <v-col cols="6">
           <div class="total-price-container">
             <span>Total Price:</span>
-            <span class="price">{{ cart.totalPrice }}</span>
+            <span class="price">{{ cart.totalPrice.toFixed(2) }} UAH</span>
           </div>
         </v-col>
 
