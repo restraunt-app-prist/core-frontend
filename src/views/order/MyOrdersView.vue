@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import Loader from '@/components/Loader.vue'; // Optional loader component
 import { getAccessToken } from '@/service/auth.js';
+import {createCheckoutSession, loadStripeScript} from "@/service/payment.js";
 
 const API_HOST = import.meta.env.VITE_APP_HOST;
 const orders = ref([]);
@@ -31,6 +32,7 @@ const fetchOrders = async () => {
 
 onMounted(() => {
   fetchOrders();
+  loadStripeScript();
 });
 </script>
 
@@ -49,9 +51,12 @@ onMounted(() => {
               <v-chip :color="getStatusColor(order.status)" class="ml-auto">
                 {{ order.status }}
               </v-chip>
+              <v-btn @click="() => createCheckoutSession(order.id, order.totalPrice)" color="success" v-if="order.status === 'PENDING'">
+                PAY
+              </v-btn>
             </v-card-title>
             <v-card-subtitle>
-              <p>Total Price: ${{ order.totalPrice }}</p>
+              <p>Total Price: {{ order.totalPrice }} UAH </p>
               <p>Created: {{ new Date(order.creationDate).toLocaleString() }}</p>
             </v-card-subtitle>
             <v-divider></v-divider>

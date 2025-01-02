@@ -23,13 +23,13 @@ export const loadStripeScript = (callback = loadStripeCallback) => {
   document.head.appendChild(script);
 };
 
-const isProcessing = ref(false);
-const errorMessage = ref("");
+const paymentIsProcessing = ref(false);
+const paymentErrorMessage = ref("");
 
 export const createCheckoutSession = async (orderId, centsAmount) => {
   try {
-    isProcessing.value = true;
-    errorMessage.value = "";
+    paymentIsProcessing.value = true;
+    paymentErrorMessage.value = "";
 
     const accessToken = getAccessToken();
 
@@ -50,12 +50,12 @@ export const createCheckoutSession = async (orderId, centsAmount) => {
     const result = await stripe.value.redirectToCheckout({ sessionId });
 
     if (result.error) {
-      errorMessage.value = result.error.message;
+      paymentErrorMessage.value = result.error.message;
     }
   } catch (error) {
-    errorMessage.value = "An error occurred while creating the session.";
+    paymentErrorMessage.value = "An error occurred while creating the session.";
     console.error(error);
   } finally {
-    isProcessing.value = false;
+    paymentIsProcessing.value = false;
   }
 };
