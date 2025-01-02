@@ -7,6 +7,7 @@ import ProfileView from '@/views/ProfileView.vue';
 import CreateOrderView from '@/views/order/CreateOrderView.vue';
 import MyOrdersView from '@/views/order/MyOrdersView.vue';
 import PaymentView from "@/views/PaymentView.vue";
+import BookingView from '@/views/BookingView.vue';
 
 const routes = [
   {
@@ -38,6 +39,11 @@ const routes = [
     path: '/payment',
     name: 'payment',
     component: PaymentView,
+  },
+  {
+    path: '/booking',
+    name: 'booking',
+    component: BookingView,
   },
   {
     path: '/login',

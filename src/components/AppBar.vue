@@ -17,6 +17,9 @@ import UserAvatar from './UserAvatar.vue';
       <v-btn class="nav-link" to="/">
         Menu
       </v-btn>
+      <v-btn class="nav-link" to="/booking">
+        Booking
+      </v-btn>
       <v-btn class="nav-link" to="/about">
         About
       </v-btn>
