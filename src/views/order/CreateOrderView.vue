@@ -5,8 +5,17 @@ import CreateOrderCartContentStepView from "@/views/order/steps/CreateOrderCartC
 import CreateOrderDeliveryStepView from "@/views/order/steps/CreateOrderDeliveryStepView.vue";
 import CreateOrderPaymentStepView from "@/views/order/steps/CreateOrderPaymentStepView.vue";
 
-
 const router = useRouter();
+
+let deliveryNeeded = ref(false);
+const deliveryDistance = ref(0);
+
+// Handles the deliveryNeeded event emitted by the child
+const handleDeliveryNeeded = (isDeliveryNeeded, distance) => {
+  deliveryNeeded.value = isDeliveryNeeded;
+  deliveryDistance.value = distance;
+  console.log("Delivery Needed:", isDeliveryNeeded, "Distance:", distance);
+};
 
 let step = ref(1);
 let steps = ['Cart content', 'Delivery', 'Payment'];
@@ -15,7 +24,7 @@ const getPrevStepperButtonText = () => {
   if (step.value === 1) {
     return "Back to cart";
   }
-  return "Next";
+  return "Prev";
 }
 
 const getNextStepperButtonText = () => {
@@ -29,7 +38,7 @@ const onStepperNextClick = () => {
   if (step.value + 1 <= steps.length) {
     step.value ++;
   } else {
-    alert("MAKE order!")
+    alert("MAKE order!" + step.value)
   }
 }
 
@@ -50,11 +59,11 @@ const onStepperPrevClick = () => {
       </template>
 
       <template v-slot:item.2>
-        <CreateOrderDeliveryStepView/>
+        <CreateOrderDeliveryStepView @deliveryNeeded="handleDeliveryNeeded"/>
       </template>
 
       <template v-slot:item.3>
-        <CreateOrderPaymentStepView/>
+        <CreateOrderPaymentStepView :deliveryNeeded="deliveryNeeded" :deliveryDistance="deliveryDistance"/>
       </template>
 
       <v-stepper-actions
