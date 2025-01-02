@@ -25,9 +25,7 @@ const createCheckoutSession = async () => {
       },
       body: JSON.stringify({
         productName: productName.value,
-        amount: parseFloat(amount.value) * 100,
-        successUrl: `${API_HOST}/my-orders`,
-        cancelUrl: `${API_HOST}/my-orders`,
+        amount: parseFloat(amount.value) * 100
       }),
     });
 
